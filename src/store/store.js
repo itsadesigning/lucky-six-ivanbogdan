@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import io from 'socket.io-client';
 
+import current from './modules/current';
+
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
@@ -23,22 +25,8 @@ export const store = new Vuex.Store({
         colors: ['red', 'green', 'blue', 'purple', 'brown', 'yellow', 'orange', 'white'],
     },
     getters: {
-        countdownText(state) {
-            switch(state.status) {
-                case 'false':
-                return 'GAME IN PROGRESS...'
-                break;
-                case 'new':
-                return 'DRAWING BALLS...'
-                break;
-                case 'true':
-                return 'COUNTDOWN: ' + state.time;
-                break;
-                default: 
-                return 'WAIT UNTIL NEXT ROUND...';
-            }
-        },
-        getColor(x) {
+        
+        /* getColor(x) {
             const modulo = x%8;
             switch(modulo) {
                 case 1:
@@ -66,7 +54,7 @@ export const store = new Vuex.Store({
                 return 'white';
                 break;
             }
-        }
+        } */
     },
     mutations: {
         addSpecialOdds(state,payload) {
@@ -197,6 +185,9 @@ export const store = new Vuex.Store({
                 });
             });
         } */
+    },
+    modules: {
+        current
     }
 });
 

@@ -20,6 +20,7 @@
             </div>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -34,9 +35,9 @@ export default {
 
 <style>
     .currentBallGrid {
-        display: flex;
+        display: grid;
         margin-top: 20px;
-        flex-wrap: nowrap;
+        grid-template-columns: repeat(35, 1fr);
     }
 
     .currentBall {

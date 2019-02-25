@@ -64,7 +64,7 @@ export default {
     methods: {
         milisecToDate(time) {
             const d = new Date(time);
-            const ds = d.toString('MM/dd/yy HH:mm:ss');
+            const ds = d.toLocaleString('HR');
             return ds;
         },
         preNumbersSum(x) {

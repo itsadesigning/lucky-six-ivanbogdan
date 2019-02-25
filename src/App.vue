@@ -11,7 +11,7 @@
     import io from 'socket.io-client';
     import axios from 'axios';
 
-    import LuckySix from './components/luckysix/LuckySix.vue';
+    import LuckySix from './components/current/LuckySix.vue';
     import LastTen from './components/lastten/LastTen.vue';
     
     const configUrl = 'https://gcm-fra-staging-1.7platform.com:8008/get-lb';
@@ -141,121 +141,5 @@
 </script>
 
 <style lang="scss">
-
-    * {
-        margin: 0;
-        padding: 0;
-        font-family: 'Montserrat', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .container {
-        background-color: #111;
-        min-height: 100vh;
-    }
-
-    .wrapper {
-        margin: auto;
-        width: 80%;
-        padding: 20px;
-    }
-
-    .luckysix {
-        background-color: #333;
-        padding: 15px;
-    }
-
-    .countdown {
-        background-color: #333;
-        text-align: center;
-        padding-bottom: 1em;
-        color: white;
-    }
-
-    .balls-grid {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-gap: 20px;
-        background-color: #333;
-        color: gray;
-    }
-
-    .balls-grid__color {
-        height: 10px;
-        width: 10px;
-        border-radius: 50%;
-        margin: auto;
-    }
-
-    .balls-grid__color--full {
-        
-    }
-
-    .countdownText {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        height: 300px;
-        color: white;
-    }
-
-    .lastTen__round {
-        font-size: 0.7em;
-        margin-top: 10px;
-        color: #aaa;
-    }
-    
-    .lastTen__roundDetails {
-        background-color: #333;
-        padding: 5px;
-        text-transform: uppercase;
-    }
-
-    .lastTen__roundBallDetails {
-        display: grid;
-        grid-template-columns: 3fr 1fr;
-        grid-gap: 10px;
-        background-color: #333;
-        padding: 5px;
-        margin-top: 3px;
-        
-    }
-
-    .lastTen__roundBallDetailsRight {
-        font-size: 0.7em;
-        color: lightskyblue;
-        display: grid;
-        grid-template-columns: auto auto;
-        text-transform: uppercase;
-    }
-
-    .lastTen__roundBallDetailsLeftTop {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-    }
-
-    .lastTen__roundBallDetailsLeftBallsItem {
-        display: block;
-        width: 15px;
-        height: 15px;
-        border: 1px solid gray;
-        border-radius: 50%;
-        position: relative;
-        font-size: 0.7em;
-        line-height: 15px;
-        text-align: center;
-        margin: auto;
-    }
-
-    .lastTen__roundBallDetailsLeftBalls {
-        padding: 5px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(17px, 1fr));
-        grid-gap: 3px;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    @import 'assets/scss/style.scss';
 </style>
