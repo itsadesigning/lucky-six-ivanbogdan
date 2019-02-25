@@ -1,26 +1,41 @@
 <template>
+    <div>
+    <div class="countdown">
+        <span class="eventId">EVENT: {{ $store.state.current.state.eventId }}</span>
+        <span class="countdownText">{{ $store.getters.countdownText }}</span>
+    </div> 
     <div class="luckysix">
-        <div class="countdown">{{ $store.getters.countdownText }}</div> 
-        <div class="balls-grid" v-if="$store.state.status !== 'true'">
+        <div class="balls-grid" v-if="$store.state.current.status !== 'true'">
             <ball-item 
-                v-for="(ball, index) in $store.state.balls" 
-                :ball="ball"
-                :index="index"
-                :key="index"
+            v-for="(ball, index) in $store.state.current.balls" 
+            :ball="ball"
+            :index="index"
+            :key="index"
             />
-            <div v-for="(color, index) in $store.state.colors" class="balls-grid__color" :class="color" :style="{backgroundColor: color}" :key="index + '_color'"></div>
+            <div 
+            v-for="(color, index) in $store.state.current.colors" 
+            class="balls-grid__color" 
+            :class="color.color"
+            :key="index + '_color'"
+            >
+                <span>{{ color.balls }}</span>
+            </div>
         </div>
-        <div class="countdownText" v-else>
-            <span>{{ $store.state.countdownTextBelow }}</span>
+        <div class="countdownTextBelow" v-else>
+            <span>{{ $store.state.current.countdownTextBelow }}</span>
         </div>
-        <div class="currentBallGrid">
-            <div v-for="(ball, index) in $store.state.currentBalls" class="currentBall" :class="ball.color" :key="index + '_color'">
-                <span>{{ index + 1 }}</span>
-                
+    </div>
+    <div class="currentBallGrid">
+            <div 
+            v-for="(ball, index) in $store.state.current.currentBalls" 
+            class="currentBall" 
+            :class="ball.color" 
+            :key="index + '_color'"
+            >
+                <span>{{ ball.ball }}</span>
             </div>
         </div>
     </div>
-    
 </template>
 
 <script>
@@ -34,22 +49,5 @@ export default {
 </script>
 
 <style>
-    .currentBallGrid {
-        display: grid;
-        margin-top: 20px;
-        grid-template-columns: repeat(35, 1fr);
-    }
 
-    .currentBall {
-        display: block;
-        width: 10px;
-        height: 10px;
-        border: 1px solid gray;
-        border-radius: 50%;
-        position: relative;
-        font-size: 0.5em;
-        line-height: 12px;
-        text-align: center;
-        margin: auto;
-    }
 </style>

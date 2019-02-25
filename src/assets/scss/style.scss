@@ -22,9 +22,25 @@
 
 .countdown {
     background-color: #333;
-    text-align: center;
-    padding-bottom: 1em;
+    text-align: left;
+    padding: 0.6rem;
+    margin-bottom: 3px;
     color: white;
+    position: relative;
+}
+
+.eventId {
+    font-size: 0.8rem;
+    display: inline;
+    line-height: 1;
+    color: #aaa;
+    vertical-align: center;
+}
+
+.countdownText {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .balls-grid {
@@ -40,13 +56,16 @@
     width: 10px;
     border-radius: 50%;
     margin: auto;
+    font-size: 0.6em;
+    line-height: 10px;
+    text-align: center;
 }
 
 .balls-grid__color--full {
     
 }
 
-.countdownText {
+.countdownTextBelow {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -55,10 +74,40 @@
     color: white;
 }
 
+.currentBallGrid {
+    display: grid;
+    margin-top: 3px;
+    background-color: #333;
+    padding: 15px;
+    grid-template-columns: repeat(35, 1fr);
+}
+
+.currentBall {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid gray;
+    border-radius: 50%;
+    position: relative;
+    font-size: 0.5em;
+    line-height: 12px;
+    text-align: center;
+    margin: auto;
+}
+
 .lastTen__round {
     font-size: 0.7em;
     margin-top: 10px;
     color: #aaa;
+}
+
+.lastTen__text {
+    margin-top: 10px;
+    text-align: center;
+    color: white;
+    background-color: #333;
+    padding: 10px;
+    text-transform: uppercase;
 }
 
 .lastTen__roundDetails {
@@ -113,6 +162,7 @@
 .right {
     text-align: right;
 }
+
 
 .balls-grid__ball {
     display: block;

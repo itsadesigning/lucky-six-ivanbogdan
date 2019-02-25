@@ -1,6 +1,9 @@
 <template>
     <div class="lastTen">
-                <div class="lastTen__round" v-for="round in $store.state.lastTen" :key="round.eventId">
+            <div class="lastTen__text">
+                LAST TEN ROUNDS:
+            </div>
+                <div class="lastTen__round" v-for="round in $store.state.lastten.lastTen" :key="round.eventId">
                     <div class="lastTen__roundDetails">
                         <span>Event: {{ round.eventId }}</span> | <span>{{ milisecToDate(round.eventTime) }}</span>
                     </div>
@@ -49,7 +52,7 @@
                             <span>First Number Even/Odd:</span><span class="right">{{ firstEvenOdd(round.balls[0].ball) }}</span>
                             <span>First Number (-24.5+):</span><span class="right">{{ firstNumber(round.balls[0].ball) }}</span>
                             <span>Even/Odd Pre Numbers:</span><span class="right">{{ evenOddPre(round.balls.slice(0,6)) }}</span>
-                            <span>Color Betting:</span><span class="right">NONE</span>
+                            <span>Color Betting:</span><span class="right">{{ colorBetting(round.balls) }}</span>
                         </div>
                     </div>
                 </div>
@@ -81,7 +84,64 @@ export default {
         evenOddPre(x) {
             let sum = 0;
             x.map((ball) => sum += ball.ball );
-            return sum % 2 == 0 ? 'EVEN' : 'ODD';
+            return sum % 2 === 0 ? 'EVEN' : 'ODD';
+        },
+        colorBetting(x) {
+            
+            /* AKO SE RIJESIMO OZNAKA ZA KOMENTAR OVDJE DOBIJEMO ISPRAVNO RJESENJE, ALI PREVELIKA KOMPUTACIJA. MORA BITI BOLJE RJESENJE. */
+
+            /* const colors = [
+                {color: 'red', balls: 0},
+                {color: 'green', balls: 0},
+                {color: 'blue', balls: 0},
+                {color: 'purple', balls: 0},
+                {color: 'brown', balls: 0},
+                {color: 'yellow', balls: 0},
+                {color: 'orange', balls: 0},
+                {color: 'white', balls: 0}];
+            
+            let results;
+            x.map((ball) => {
+                switch(ball.color){
+                    case 'red':
+                    colors[0].balls++;
+                    break;
+                    case 'green':
+                    colors[1].balls++;
+                    break;
+                    case 'blue':
+                    colors[2].balls++;
+                    break;
+                    case 'purple':
+                    colors[3].balls++;
+                    break;
+                    case 'brown':
+                    colors[4].balls++;
+                    break;
+                    case 'yellow':
+                    colors[5].balls++;
+                    break;
+                    case 'orange':
+                    colors[6].balls++;
+                    break;
+                    case 'white':
+                    colors[7].balls++;
+                    break;
+                }
+
+                results = colors.filter((color) => {
+                    return color.balls === 6
+                });
+            }); */
+
+            let text = '';
+            /* results.map((ball) => text = ball.color + ' ' + text); */
+
+            if(text == '') {
+                return 'NONE';
+            } else {
+                return text.toUpperCase();
+            }
         }
     },
     created() {

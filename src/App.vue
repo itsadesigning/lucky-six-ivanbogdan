@@ -66,9 +66,10 @@
                 let modulo = (ball%8);
                 
                 newBall.color = this.ballColor(modulo);
-                this.$store.commit('insertBall', {ball, newBall} );
-                this.$store.commit('pushBall', newBall );
-            }
+                this.$store.dispatch('setBall', {ball, newBall} );
+                this.$store.dispatch('pushBall', newBall );
+            },
+
         },
         created() {
             this.$store.dispatch('getLastTen');
@@ -89,16 +90,18 @@
                     if (res) {
                         const eventType = res.type;
                         const data = res.data;
+                        this.$store.dispatch('setState', data);
+                        console.log(data);
                         switch (eventType) {
                             case 'state':
-                                console.log('state: ', data);
                                 switch (data.type) {
                                     case 'countdown':
-                                    this.$store.commit('changeStatus', 'true');
-                                    console.log((Date.now() - data.time));
-                                    this.$store.state.time = Math.abs(Math.trunc((Date.now() - data.time)/1000) - 146);
-                                    this.$store.commit('toggleCountdown');
-                                    this.$store.commit('addSpecialOdds', data.specialOdds);
+                                    let newTime;
+                                    this.$store.dispatch('setStatus', 'true');
+                                    newTime = Math.abs(Math.trunc((Date.now() - data.time)/1000) - 146);
+                                    this.$store.dispatch('setTime', newTime);
+                                    this.$store.dispatch('activateCountdown');
+                                    this.$store.dispatch('setSpecialOdds', data.specialOdds);
                                     break;
                                     case 'ball':
                                     data.balls.map(ball => this.activeBall(ball));
@@ -106,8 +109,8 @@
                                 }
                                 break;
                             case 'new':
-                                console.log('new: ', data);
-                                this.$store.commit('changeStatus', 'new');
+                                this.$store.dispatch('emptyColors');
+                                this.$store.dispatch('setStatus', 'new');
                                 this.$store.state.balls = Array(48).fill({
                                     id: '',
                                     ball: '',
@@ -116,20 +119,17 @@
                                 });
                                 break;
                             case 'ball':
-                                console.log('ball: ', data);
-                                this.$store.commit('changeStatus', 'false');
+                                this.$store.dispatch('setStatus', 'false');
                                 this.activeBall(data);
                             case 'results':
-                                console.log('results: ', data);
                                 break;
                             case 'countdown':
-                                console.log('countdown: ', data);
-                                this.$store.commit('addSpecialOdds', data.specialOdds);
+                                this.$store.dispatch('setSpecialOdds', data.specialOdds);
                                 this.$store.dispatch('getLastTen');
-                                this.$store.commit('changeStatus', 'true');
-                                this.$store.commit('emptyCurrent');
-                                this.$store.state.time = 145;
-                                this.$store.commit('toggleCountdown');
+                                this.$store.dispatch('setStatus', 'true');
+                                this.$store.dispatch('emptyCurrent');
+                                this.$store.dispatch('setTime');
+                                this.$store.dispatch('activateCountdown');
                                 break;
                         }
                     }
