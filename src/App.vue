@@ -2,22 +2,22 @@
     <div class="container">
         <div class="wrapper">
             <div class="main">
-                <div class="countdown">{{ countdownText }}</div> 
-                <div class="balls-grid" v-if="this.state !== 'true'">
+                <div class="countdown">{{ $store.getters.countdownText }}</div> 
+                <div class="balls-grid" v-if="$store.state.status !== 'true'">
                     <ball-item 
-                        v-for="(ball, index) in balls" 
+                        v-for="(ball, index) in $store.state.balls" 
                         :ball="ball"
                         :index="index"
                         :key="index"
                     />
-                    <div v-for="(color, index) in colors" class="balls-grid__color" :class="color" :style="{backgroundColor: color}" :key="index + '_color'"></div>
+                    <div v-for="(color, index) in $store.state.colors" class="balls-grid__color" :class="color" :style="{backgroundColor: color}" :key="index + '_color'"></div>
                 </div>
                 <div class="countdownText" v-else>
-                    <span>{{ countdownTextBelow }}</span>
+                    <span>{{ $store.state.countdownTextBelow }}</span>
                 </div>
             </div>
             <div class="lastTen">
-                <div class="lastTen__round" v-for="round in lastTen" :key="round.eventId">
+                <div class="lastTen__round" v-for="round in $store.state.lastTen" :key="round.eventId">
                     <div class="lastTen__roundDetails">
                         <span>Event: {{ round.eventId }}</span> | <span>{{ milisecToDate(round.eventTime) }}</span>
                     </div>
@@ -69,12 +69,7 @@
                             <span>Color Betting:</span><span class="right">NONE</span>
                         </div>
                     </div>
-                    <!-- <ball-item 
-                        v-for="(ball, index) in balls" 
-                        :ball="ball"
-                        :index="index"
-                        :key="index"
-                    /> -->
+
                 </div>
             </div>
         </div>
@@ -95,40 +90,6 @@
         components: {
             BallItem,
 
-        },
-        data: function() {
-            return {
-                colors: ['red', 'green', 'blue', 'purple', 'brown', 'yellow', 'orange', 'white'],
-                balls: Array(48).fill({
-                    id: '',
-                    ball: '',
-                    eventId: '',
-                    active: false,
-                    color: ''
-                }),
-                state: '',
-                countdownTime: false,
-                countdownTextBelow: '',
-                lastTen: [],
-                time: 146
-            }
-        },
-        computed: {
-            countdownText() {
-                switch(this.state) {
-                    case 'false':
-                    return 'GAME IN PROGRESS...'
-                    break;
-                    case 'new':
-                    return 'DRAWING BALLS...'
-                    break;
-                    case 'true':
-                    return 'COUNTDOWN: ' + this.time;
-                    break;
-                    default: 
-                    return 'WAIT UNTIL NEXT ROUND...';
-                }
-            }
         },
         methods: {
             ballColor(x) {
@@ -161,11 +122,7 @@
                 }
             },
             getLastTen() {
-            axios.get('https://services-staging.7platform.com/web/events/1d0d6713-b7c9-4f07-ab23-3451a06e8989.json?count=11')
-                .then((res) => {
-                    this.lastTen = res.data;
-                    console.log(this.lastTen);
-                    });
+
             },
             milisecToDate(time) {
                 const d = new Date(time);
@@ -180,90 +137,18 @@
                     color: '',
                     active: true
                 }
-
-                let modulo = (data.ball%8);
                 
-                switch(modulo) {
-                    case 1:
-                    newBall.color = 'red';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 2:
-                    newBall.color = 'green';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 3:
-                    newBall.color = 'blue';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 4:
-                    newBall.color = 'purple';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 5:
-                    newBall.color = 'brown';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 6:
-                    newBall.color = 'yellow';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 7:
-                    newBall.color = 'orange';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                    case 0:
-                    newBall.color = 'white';
-                    this.balls.splice(data.ball-1, 1, newBall);
-                    break;
-                }
+                let ball = data.ball;
+                let modulo = (ball%8);
+                
+                newBall.color = this.ballColor(modulo);
+                this.$store.commit('insertBall', {ball, newBall} );
             }
-        },
-        watch: {
-            countdownTime() {
-                console.log('COUNTDOWN INITIATED');
-                let interval = setInterval(() => {
-                    this.time--;
-                    console.log('TIME:', this.time);
-                    switch(this.time) {
-                        case 145:
-                            this.countdownTextBelow = '1';        
-                        break;
-                        case 120:
-                            this.countdownTextBelow = '2';    
-                        break;
-                        case 100:
-                            this.countdownTextBelow = '3';
-                        break;
-                        case 80:
-                            this.countdownTextBelow = '4';
-                        break;
-                        case 60:
-                            this.countdownTextBelow = '5';
-                        break;
-                        case 40:
-                            this.countdownTextBelow = '6';
-                        break;
-                        case 20:
-                            this.countdownTextBelow = '7';
-                        break;
-                        case 0: 
-                            clearInterval(interval);
-                        break;
-                    }
-                    /* if (this.time == 0) {
-                        clearInterval(interval);
-                    } */
-                }, 1000);
-            },
-
         },
         created() {
             axios.get(configUrl).then((res) => {
                 const socketUrl = res.data.url;
-                const socket = io(socketUrl, {
-                    query
-                });
+                const socket = io(socketUrl, {query});
                 socket.on('connect', () => {
                     socket.emit('subscribe', {
                         channel,
@@ -283,10 +168,10 @@
                                 console.log('state: ', data);
                                 switch (data.type) {
                                     case 'countdown':
-                                    this.state = 'true';
+                                    this.$store.commit('changeStatus', 'true');
                                     console.log((Date.now() - data.time));
-                                    this.time = Math.abs(Math.trunc((Date.now() - data.time)/1000) - 146);
-                                    this.countdownTime = !this.countdownTime;
+                                    this.$store.state.time = Math.abs(Math.trunc((Date.now() - data.time)/1000) - 146);
+                                    this.$store.commit('toggleCountdown');
                                     break;
                                     case 'ball':
                                     data.balls.map(ball => this.activeBall(ball));
@@ -295,8 +180,8 @@
                                 break;
                             case 'new':
                                 console.log('new: ', data);
-                                this.state = 'new';
-                                this.balls = Array(48).fill({
+                                this.$store.commit('changeStatus', 'new');
+                                this.$store.state.balls = Array(48).fill({
                                     id: '',
                                     ball: '',
                                     eventId: '',
@@ -306,23 +191,23 @@
                                 break;
                             case 'ball':
                                 console.log('ball: ', data);
-                                this.state = 'false';
+                                this.$store.commit('changeStatus', 'false');
                                 this.activeBall(data);
                             case 'results':
                                 console.log('results: ', data);
                                 break;
                             case 'countdown':
                                 console.log('countdown: ', data);
-                                this.getLastTen();
-                                this.state = 'true';
-                                this.time = 146;
-                                this.countdownTime = !this.countdownTime;
+                                this.$store.dispatch('getLastTen');
+                                this.$store.commit('changeStatus', 'true');
+                                this.$store.state.time = 145;
+                                this.$store.commit('toggleCountdown');
                                 break;
                         }
                     }
                 });
             });
-            this.getLastTen();
+            this.$store.dispatch('getLastTen');
         }
     }
 </script>
