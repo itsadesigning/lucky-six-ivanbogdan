@@ -44,11 +44,11 @@
                             </div>
                         </div>
                         <div class="lastTen__roundBallDetailsRight">
-                            <span>First Ball Color:</span><span class="right">RED</span>
-                            <span>Pre Numbers Sum (-122.5+):</span><span class="right">UNDER</span>
-                            <span>First Number Even/Odd:</span><span class="right">EVEN</span>
-                            <span>First Number (-24.5+):</span><span class="right">OVER</span>
-                            <span>Even/Odd Pre Numbers:</span><span class="right">EVEN</span>
+                            <span>First Ball Color:</span><span class="right">{{ ballColor(round.balls[0].ball).toUpperCase() }}</span>
+                            <span>Pre Numbers Sum (-122.5+):</span><span class="right">{{ preNumbersSum(round.balls.slice(0,6)) }}</span>
+                            <span>First Number Even/Odd:</span><span class="right">{{ firstEvenOdd(round.balls[0].ball) }}</span>
+                            <span>First Number (-24.5+):</span><span class="right">{{ firstNumber(round.balls[0].ball) }}</span>
+                            <span>Even/Odd Pre Numbers:</span><span class="right">{{ evenOddPre(round.balls.slice(0,6)) }}</span>
                             <span>Color Betting:</span><span class="right">NONE</span>
                         </div>
                     </div>
@@ -58,10 +58,38 @@
 
 <script>
 export default {
-    
+    props: {
+        ballColor: Function,
+    },
+    methods: {
+        milisecToDate(time) {
+            const d = new Date(time);
+            const ds = d.toString('MM/dd/yy HH:mm:ss');
+            return ds;
+        },
+        preNumbersSum(x) {
+            let sum = 0;
+            x.map((ball) => sum += ball.ball );
+            return sum < 122.5 ? 'UNDER': 'OVER';
+        },
+        firstEvenOdd(x) {
+            return (x % 2) == 0 ? 'EVEN' : 'ODD';
+        },
+        firstNumber(x) {
+            return x < 22.5 ? 'UNDER' : 'OVER';
+        },
+        evenOddPre(x) {
+            let sum = 0;
+            x.map((ball) => sum += ball.ball );
+            return sum % 2 == 0 ? 'EVEN' : 'ODD';
+        }
+    },
+    created() {
+        
+    }
 }
 </script>
 
 <style>
-
+    
 </style>

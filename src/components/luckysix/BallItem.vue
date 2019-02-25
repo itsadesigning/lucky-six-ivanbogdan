@@ -34,21 +34,21 @@ export default {
     }
 
     .red {
-        border: 1px solid red;
+        border: 1px solid rgb(219, 23, 23);
         background-color: rgba(255, 0, 0, 0.05);
-        color: red;
+        color: rgb(219, 23, 23);
     }
 
     .green {
-        border: 1px solid green;
+        border: 1px solid rgb(22, 155, 22);
         background-color: rgba(0, 128, 0, 0.05);
-        color: green;
+        color: rgb(22, 155, 22);
     }
     
     .blue {
-        border: 1px solid blue;
+        border: 1px solid rgb(37, 99, 233);
         background-color: rgba(0, 0, 200, 0.05);
-        color: blue;
+        color: rgb(37, 99, 233);
     }
 
     .purple {

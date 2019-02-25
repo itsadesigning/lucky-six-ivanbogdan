@@ -8,17 +8,18 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         status: '',
+        lastTen: [],
         time: 146,
         countdownState: false,
         countdownTextBelow: '',
+        currentBalls: [],
         balls: Array(48).fill({
             id: '',
             ball: '',
             eventId: '',
-            active: false,
             color: '',
-            lastTen: [],
         }),
+        specialOdds: [],
         colors: ['red', 'green', 'blue', 'purple', 'brown', 'yellow', 'orange', 'white'],
     },
     getters: {
@@ -68,8 +69,17 @@ export const store = new Vuex.Store({
         }
     },
     mutations: {
+        addSpecialOdds(state,payload) {
+            state.specialOdds = payload;
+        },
         insertLastTen(state, payload) {
             state.lastTen = payload;
+        },
+        pushBall(state, payload) {
+            state.currentBalls.push(payload);
+        },
+        emptyCurrent(state, payload) {
+            state.currentBalls = [];
         },
         insertBall(state, {ball, newBall}) {
             state.balls.splice(ball-1, 1, newBall);
@@ -84,25 +94,25 @@ export const store = new Vuex.Store({
                 console.log('TIME:', state.time);
                 switch(state.time) {
                     case 144:
-                        state.countdownTextBelow = '1';        
+                        state.countdownTextBelow = `${state.specialOdds[0].name} Odds: ${state.specialOdds[0].odds}` ;        
                     break;
                     case 120:
-                        state.countdownTextBelow = '2';    
+                        state.countdownTextBelow = `${state.specialOdds[1].name} Odds: ${state.specialOdds[1].odds}` ;    
                     break;
                     case 100:
-                        state.countdownTextBelow = '3';
+                        state.countdownTextBelow = `${state.specialOdds[2].name} Odds: ${state.specialOdds[2].odds}` ;
                     break;
                     case 80:
-                        state.countdownTextBelow = '4';
+                        state.countdownTextBelow = `${state.specialOdds[3].name} Odds: ${state.specialOdds[3].odds}` ;
                     break;
                     case 60:
-                        state.countdownTextBelow = '5';
+                        state.countdownTextBelow = `${state.specialOdds[4].name} Odds: ${state.specialOdds[4].odds}` ;
                     break;
                     case 40:
-                        state.countdownTextBelow = '6';
+                        state.countdownTextBelow = `${state.specialOdds[5].name} Odds: ${state.specialOdds[5].odds}` ;
                     break;
                     case 20:
-                        state.countdownTextBelow = '7';
+                        state.countdownTextBelow = `${state.specialOdds[0].name} Odds: ${state.specialOdds[0].odds}` ;
                     break;
                     case 0: 
                         state.time = 146;

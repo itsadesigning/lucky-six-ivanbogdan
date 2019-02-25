@@ -1,77 +1,8 @@
 <template>
     <div class="container">
         <div class="wrapper">
-            <div class="main">
-                <div class="countdown">{{ $store.getters.countdownText }}</div> 
-                <div class="balls-grid" v-if="$store.state.status !== 'true'">
-                    <ball-item 
-                        v-for="(ball, index) in $store.state.balls" 
-                        :ball="ball"
-                        :index="index"
-                        :key="index"
-                    />
-                    <div v-for="(color, index) in $store.state.colors" class="balls-grid__color" :class="color" :style="{backgroundColor: color}" :key="index + '_color'"></div>
-                </div>
-                <div class="countdownText" v-else>
-                    <span>{{ $store.state.countdownTextBelow }}</span>
-                </div>
-            </div>
-            <div class="lastTen">
-                <div class="lastTen__round" v-for="round in $store.state.lastTen" :key="round.eventId">
-                    <div class="lastTen__roundDetails">
-                        <span>Event: {{ round.eventId }}</span> | <span>{{ milisecToDate(round.eventTime) }}</span>
-                    </div>
-                    <div class="lastTen__roundBallDetails"> 
-                        <div class="lastTen__roundBallDetailsLeft">
-                            <div class="lastTen__roundBallDetailsLeftTop">
-                                <div><span>Pre balls:</span>
-                                <div class="lastTen__roundBallDetailsLeftBalls">
-                                <div 
-                                    class="lastTen__roundBallDetailsLeftBallsItem"
-                                    :class="ballColor(ball.ball)"
-                                    v-for="ball in round.balls.slice(0,6)" 
-                                    :key="ball.id">
-                                {{ ball.ball }}
-                                </div>
-                                </div>
-                                </div>
-                                <div><span>Bonus balls:</span>
-                                <div class="lastTen__roundBallDetailsLeftBalls">
-                                <div 
-                                    class="lastTen__roundBallDetailsLeftBallsItem"
-                                    :class="ballColor(ball)"
-                                    v-for="ball in round.bonusBalls" 
-                                    :key="ball.id">
-                                {{ ball }}
-                                </div>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="lastTen__roundBallDetailsLeftBottom">
-                                <span>Drawn balls:</span>
-                                <div class="lastTen__roundBallDetailsLeftBalls">
-                                <div 
-                                    class="lastTen__roundBallDetailsLeftBallsItem"
-                                    :class="ballColor(ball.ball)"
-                                    v-for="ball in round.balls" 
-                                    :key="ball.id">
-                                {{ ball.ball }}
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lastTen__roundBallDetailsRight">
-                            <span>First Ball Color:</span><span class="right">RED</span>
-                            <span>Pre Numbers Sum (-122.5+):</span><span class="right">UNDER</span>
-                            <span>First Number Even/Odd:</span><span class="right">EVEN</span>
-                            <span>First Number (-24.5+):</span><span class="right">OVER</span>
-                            <span>Even/Odd Pre Numbers:</span><span class="right">EVEN</span>
-                            <span>Color Betting:</span><span class="right">NONE</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            <lucky-six />
+            <last-ten :ballColor="ballColor"/>
         </div>
     </div>
 </template>
@@ -80,7 +11,8 @@
     import io from 'socket.io-client';
     import axios from 'axios';
 
-    import BallItem from './BallItem.vue';
+    import LuckySix from './components/luckysix/LuckySix.vue';
+    import LastTen from './components/lastten/LastTen.vue';
     
     const configUrl = 'https://gcm-fra-staging-1.7platform.com:8008/get-lb';
     const query = 'token="token"&clientType="user"';
@@ -88,8 +20,8 @@
     
     export default {
         components: {
-            BallItem,
-
+            LuckySix,
+            LastTen
         },
         methods: {
             ballColor(x) {
@@ -121,14 +53,6 @@
                     break;
                 }
             },
-            getLastTen() {
-
-            },
-            milisecToDate(time) {
-                const d = new Date(time);
-                const ds = d.toString('MM/dd/yy HH:mm:ss');
-                return ds;
-            },
             activeBall(data) {
                 let newBall = {
                     id: data.id,
@@ -143,9 +67,11 @@
                 
                 newBall.color = this.ballColor(modulo);
                 this.$store.commit('insertBall', {ball, newBall} );
+                this.$store.commit('pushBall', newBall );
             }
         },
         created() {
+            this.$store.dispatch('getLastTen');
             axios.get(configUrl).then((res) => {
                 const socketUrl = res.data.url;
                 const socket = io(socketUrl, {query});
@@ -172,6 +98,7 @@
                                     console.log((Date.now() - data.time));
                                     this.$store.state.time = Math.abs(Math.trunc((Date.now() - data.time)/1000) - 146);
                                     this.$store.commit('toggleCountdown');
+                                    this.$store.commit('addSpecialOdds', data.specialOdds);
                                     break;
                                     case 'ball':
                                     data.balls.map(ball => this.activeBall(ball));
@@ -185,7 +112,6 @@
                                     id: '',
                                     ball: '',
                                     eventId: '',
-                                    active: false,
                                     color: ''
                                 });
                                 break;
@@ -198,8 +124,10 @@
                                 break;
                             case 'countdown':
                                 console.log('countdown: ', data);
+                                this.$store.commit('addSpecialOdds', data.specialOdds);
                                 this.$store.dispatch('getLastTen');
                                 this.$store.commit('changeStatus', 'true');
+                                this.$store.commit('emptyCurrent');
                                 this.$store.state.time = 145;
                                 this.$store.commit('toggleCountdown');
                                 break;
@@ -207,7 +135,7 @@
                     }
                 });
             });
-            this.$store.dispatch('getLastTen');
+            
         }
     }
 </script>
@@ -231,7 +159,7 @@
         padding: 20px;
     }
 
-    .main {
+    .luckysix {
         background-color: #333;
         padding: 15px;
     }
@@ -272,13 +200,15 @@
     }
 
     .lastTen__round {
-        font-size: 0.8em;
+        font-size: 0.7em;
         margin-top: 10px;
+        color: #aaa;
     }
     
     .lastTen__roundDetails {
         background-color: #333;
         padding: 5px;
+        text-transform: uppercase;
     }
 
     .lastTen__roundBallDetails {
@@ -288,6 +218,7 @@
         background-color: #333;
         padding: 5px;
         margin-top: 3px;
+        
     }
 
     .lastTen__roundBallDetailsRight {
@@ -295,6 +226,7 @@
         color: lightskyblue;
         display: grid;
         grid-template-columns: auto auto;
+        text-transform: uppercase;
     }
 
     .lastTen__roundBallDetailsLeftTop {
