@@ -111,12 +111,7 @@
                             case 'new':
                                 this.$store.dispatch('emptyColors');
                                 this.$store.dispatch('setStatus', 'new');
-                                this.$store.state.balls = Array(48).fill({
-                                    id: '',
-                                    ball: '',
-                                    eventId: '',
-                                    color: ''
-                                });
+                                this.$store.dispatch('emptyBalls');
                                 break;
                             case 'ball':
                                 this.$store.dispatch('setStatus', 'false');

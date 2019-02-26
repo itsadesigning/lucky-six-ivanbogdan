@@ -1,3 +1,6 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +8,7 @@
 }
 
 .container {
-    background-color: #111;
+    background-color: $darker;
     min-height: 100vh;
 }
 
@@ -16,14 +19,14 @@
 }
 
 .luckysix {
-    background-color: #333;
+    background-color: $lighter;
     padding: 15px;
 }
 
 .countdown {
-    background-color: #333;
+    background-color: $lighter;
     text-align: left;
-    padding: 0.6rem;
+    padding: 0.7rem;
     margin-bottom: 3px;
     color: white;
     position: relative;
@@ -47,18 +50,13 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-gap: 20px;
-    background-color: #333;
+    background-color: $lighter;
     color: gray;
 }
 
 .balls-grid__color {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    margin: auto;
+    @include centerBall(10px);
     font-size: 0.6em;
-    line-height: 10px;
-    text-align: center;
 }
 
 .balls-grid__color--full {
@@ -74,25 +72,32 @@
     color: white;
 }
 
+.odds {
+    margin:30px;
+}
+.odds span {
+    margin-bottom:19px;
+}
+
+.oddSpan {
+    font-size: 0.9em;
+    color: gray;
+}
+
 .currentBallGrid {
     display: grid;
     margin-top: 3px;
-    background-color: #333;
+    background-color: $lighter;
     padding: 15px;
     grid-template-columns: repeat(35, 1fr);
 }
 
 .currentBall {
-    display: block;
-    width: 10px;
-    height: 10px;
+    @include centerBall(10px);
     border: 1px solid gray;
-    border-radius: 50%;
     position: relative;
     font-size: 0.5em;
-    line-height: 12px;
-    text-align: center;
-    margin: auto;
+
 }
 
 .lastTen__round {
@@ -105,13 +110,13 @@
     margin-top: 10px;
     text-align: center;
     color: white;
-    background-color: #333;
+    background-color: $lighter;
     padding: 10px;
     text-transform: uppercase;
 }
 
 .lastTen__roundDetails {
-    background-color: #333;
+    background-color: $lighter;
     padding: 5px;
     text-transform: uppercase;
 }
@@ -120,10 +125,9 @@
     display: grid;
     grid-template-columns: 3fr 1fr;
     grid-gap: 10px;
-    background-color: #333;
+    background-color: $lighter;
     padding: 5px;
     margin-top: 3px;
-    
 }
 
 .lastTen__roundBallDetailsRight {
@@ -140,16 +144,10 @@
 }
 
 .lastTen__roundBallDetailsLeftBallsItem {
-    display: block;
-    width: 15px;
-    height: 15px;
+    @include centerBall(15px);
     border: 1px solid gray;
-    border-radius: 50%;
     position: relative;
     font-size: 0.7em;
-    line-height: 15px;
-    text-align: center;
-    margin: auto;
 }
 
 .lastTen__roundBallDetailsLeftBalls {
@@ -163,67 +161,57 @@
     text-align: right;
 }
 
-
 .balls-grid__ball {
-    display: block;
-    width: 30px;
-    height: 30px;
+    @include centerBall(30px);
     border: 1px solid gray;
-    border-radius: 50%;
     position: relative;
     font-size: 12px;
-    line-height: 30px;
-    text-align: center;
-    margin: auto;
-}
-
-.balls-grid__ball span {
 }
 
 .red {
-    border: 1px solid rgb(219, 23, 23);
-    background-color: rgba(255, 0, 0, 0.05);
-    color: rgb(219, 23, 23);
+    border: 1px solid $color-red;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: $color-red;
 }
 
 .green {
-    border: 1px solid rgb(22, 155, 22);
-    background-color: rgba(0, 128, 0, 0.05);
-    color: rgb(22, 155, 22);
+    border: 1px solid $color-green;
+    background-color: rgba(0, 128, 0, 0.1);
+    color: $color-green;
 }
 
 .blue {
-    border: 1px solid rgb(37, 99, 233);
-    background-color: rgba(0, 0, 200, 0.05);
-    color: rgb(37, 99, 233);
+    border: 1px solid $color-blue;
+    background-color: rgba(0, 0, 200, 0.1);
+    color: $color-blue;
 }
 
 .purple {
-    border: 1px solid blueviolet;
-    background-color: rgba(138, 43, 226, 0.05);
-    color: blueviolet;
+    border: 1px solid $color-purple;
+    background-color: rgba(138, 43, 226, 0.1);
+    color: $color-purple;
 }
 
 .brown {
-    border: 1px solid brown;
-    background-color: rgba(165, 42, 42, 0.05);
-    color: brown;
+    border: 1px solid $color-brown;
+    background-color: rgba(165, 42, 42, 0.1);
+    color: $color-brown;
 }
 
 .yellow {
-    border: 1px solid yellow;
-    background-color: rgba(255, 255, 0, 0.05);
-    color: yellow;
+    border: 1px solid $color-yellow;
+    background-color: rgba(255, 255, 0, 0.1);
+    color: $color-yellow;
 }
 
 .orange {
-    border: 1px solid orange;
-    background-color: rgba(255, 165, 0, 0.05);
-    color: orange;
+    border: 1px solid $color-orange;
+    background-color: rgba(255, 165, 0, 0.1);
+    color: $color-orange;
 }
 
 .white {
-    border: 1px solid white;
-    background-color: rgba(255, 255, 255, 0.05);
-    color: white;
+    border: 1px solid $color-white;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: $color-white;
 }

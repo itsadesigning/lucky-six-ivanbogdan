@@ -1,0 +1,9 @@
+@mixin centerBall($property) {
+    width: $property;
+    height: $property;
+    line-height: $property;
+    display: block;
+    border-radius: 50%;
+    text-align: center;
+    margin: auto;
+  }

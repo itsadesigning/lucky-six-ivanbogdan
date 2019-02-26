@@ -8,6 +8,7 @@ const state = {
     status: '',
     specialOdds: [],
     currentBalls: [],
+    showOdds: false,
     balls: Array(48).fill({
         id: '',
         ball: '',
@@ -36,7 +37,7 @@ const getters = {
             return 'DRAWING BALLS...'
             break;
             case 'true':
-            return 'COUNTDOWN: ' + state.time;
+            return 'NEXT ROUND IN: ' + state.time;
             break;
             default: 
             return 'WAIT UNTIL NEXT ROUND...';
@@ -50,7 +51,6 @@ const mutations = {
             return color.color == newBall.color
         });
         state.colors[index].balls++;
-        console.log(state.colors[index]);
         state.balls.splice(ball-1, 1, newBall);
     },
     setState(state, payload) {
@@ -68,6 +68,14 @@ const mutations = {
     setSpecialOdds(state,payload) {
         state.specialOdds = payload;
     },
+    emptyBalls(state, payload) {
+        state.balls = Array(48).fill({
+            id: '',
+            ball: '',
+            eventId: '',
+            color: '',
+        });
+    },
     emptyCurrent(state, payload) {
         state.currentBalls = [];
     },
@@ -80,9 +88,10 @@ const mutations = {
             console.log('TIME:', state.time);
             switch(state.time) {
                 case 144:
-                    state.countdownTextBelow = `${state.specialOdds[0].name} Odds: ${state.specialOdds[0].odds}` ;        
+                    state.showOdds = true;
                 break;
                 case 120:
+                    state.showOdds = false;
                     state.countdownTextBelow = `${state.specialOdds[1].name} Odds: ${state.specialOdds[1].odds}` ;    
                 break;
                 case 100:
@@ -95,6 +104,7 @@ const mutations = {
                     state.countdownTextBelow = `${state.specialOdds[4].name} Odds: ${state.specialOdds[4].odds}` ;
                 break;
                 case 40:
+                
                     state.countdownTextBelow = `${state.specialOdds[5].name} Odds: ${state.specialOdds[5].odds}` ;
                 break;
                 case 20:
@@ -130,6 +140,9 @@ const actions = {
     },
     setSpecialOdds({commit}, payload) {
         commit('setSpecialOdds', payload);
+    },
+    emptyBalls({commit}, payload) {
+        commit('emptyBalls', payload);
     },
     emptyCurrent({commit}, payload) {
         commit('emptyCurrent', payload);
